@@ -1,3 +1,8 @@
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 
 class Add extends Thread {
 	int value;
@@ -34,8 +39,9 @@ public class ThreadsJoinExp {
 	/**
 	 * @param args
 	 * @throws InterruptedException 
+	 * @throws ExecutionException 
 	 */
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		// TODO Auto-generated method stub
 		Add a = new Add(); Mul b = new Mul();
 		a.start();
@@ -46,6 +52,14 @@ public class ThreadsJoinExp {
 		double n = ((double)b.value/a.value);
  
 		System.out.println(n);
+		// Creates a pool of threads which you can add
+		ExecutorService executor = Executors.newCachedThreadPool();
+		Future fut1 = executor.submit(new Add());
+		executor.submit(new Mul());
+		executor.shutdown();
+		//
+		System.out.println(fut1.get());
+		System.out.println("All done");
 	}
 
 }
